@@ -15,16 +15,20 @@ class App extends Component {
 export default App;
 
 class DiceCup extends React.Component{
-  submit(event){
-    console.log('Event fired');
+  submit = (event) => {
+    console.log(this.state.rawSpec);
     event.preventDefault();
+  }
+
+  specChanged = (event) => {
+    this.setState({rawSpec: event.target.value});
   }
 
   render(){
     return (
       <form onSubmit={this.submit}>
         <label for="rollSpec">Roll spec</label>
-        <input type="text" id="rollSpec" />
+        <input type="text" id="rollSpec" onChange={this.specChanged} />
         <button type="submit">Fill my cup</button>
       </form>
     )
