@@ -14,7 +14,7 @@ namespace unit
             await CTest<RollSpecContext>
                 .Given(a => a.RollSpecInput("1d6"))
                 .When(i => i.BuildRollSpec())
-                .Then(i => i.SpecHasXDiceAtSizeY(1, 6))
+                .Then(i => i.SpecHasXDiceAtSizeY((1, 6)))
                 .ExecuteAsync();
         }
 
@@ -24,7 +24,7 @@ namespace unit
             await CTest<RollSpecContext>
                 .Given(a => a.RollSpecInput("5d6"))
                 .When(i => i.BuildRollSpec())
-                .Then(i => i.SpecHasXDiceAtSizeY(5, 6))
+                .Then(i => i.SpecHasXDiceAtSizeY((5, 6)))
                 .ExecuteAsync();
         }
 
@@ -34,7 +34,17 @@ namespace unit
             await CTest<RollSpecContext>
                 .Given(a => a.RollSpecInput("3d12"))
                 .When(i => i.BuildRollSpec())
-                .Then(i => i.SpecHasXDiceAtSizeY(3, 12))
+                .Then(i => i.SpecHasXDiceAtSizeY((3, 12)))
+                .ExecuteAsync();
+        }
+
+        [Fact]
+        public async Task Spec2d4And4d8()
+        {
+            await CTest<RollSpecContext>
+                .Given(a => a.RollSpecInput("2d4,4d8"))
+                .When(i => i.BuildRollSpec())
+                .Then(i => i.SpecHasXDiceAtSizeY((2, 4), (4,8)))
                 .ExecuteAsync();
         }
 

@@ -20,11 +20,18 @@ namespace Unit.Steps
             when.Context.RollSpec = new RollSpec(when.Context.RollSpecInput);
         }
 
-        public static void SpecHasXDiceAtSizeY<T>(this IThen<T> then, int count, int size)
+        public static void SpecHasXDiceAtSizeY<T>(this IThen<T> then, params (int count, int size)[] specs)
         where T : IHasRollSpec
         {
-            var dice = then.Context.RollSpec.Dice.Where(d => d.Size == size);
-            Assert.Equal(count, dice.Count());
+            int totalCount = specs.Sum(s => s.count);
+
+            Assert.Equal(totalCount, then.Context.RollSpec.Dice.Count());
+
+            foreach (var spec in specs)
+            {
+                var dice = then.Context.RollSpec.Dice.Where(d => d.Size == spec.size);
+                Assert.Equal(spec.count, dice.Count());
+            }
         }
     }
 }

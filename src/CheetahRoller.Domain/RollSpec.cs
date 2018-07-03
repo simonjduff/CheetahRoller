@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using CheetahRoller.Base.Extensions;
+
 //using CheetahRoller.Base;
 
 namespace CheetahRoller.Domain
@@ -20,18 +22,21 @@ namespace CheetahRoller.Domain
                 throw new ArgumentException("Spec must not be empty", nameof(spec));
             }
 
-            var match = SpecRegex.Match(spec);
-            if (!match.Success)
+            var matches = SpecRegex.Matches(spec).ToList();
+
+            if (!matches.Any(m => m.Success))
             {
                 throw new InvalidSpecException();
             }
 
-            Dice = Enumerable.Range(0, int.Parse(match.Groups["count"].Value))
-                .Select(r => new DiceSize(int.Parse(match.Groups["size"].Value)));
+            Dice = matches
+                .Where(m => m.Success)
+                .SelectMany(m => Enumerable.Range(0, int.Parse(m.Groups["count"].Value))
+                    .Select(r => new DiceSize(int.Parse(m.Groups["size"].Value))));
         }
 
         // 4d6
-        public static readonly Regex SpecRegex = new Regex(@"^(?<count>\d+)d(?<size>\d+)$", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+        public static readonly Regex SpecRegex = new Regex(@"(?<count>\d+)d(?<size>\d+)", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
         public class InvalidSpecException : Exception
         {
