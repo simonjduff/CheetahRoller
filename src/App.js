@@ -6,16 +6,27 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <DiceCup />
       </div>
     );
   }
 }
 
 export default App;
+
+class DiceCup extends React.Component{
+  submit(event){
+    console.log('Event fired');
+    event.preventDefault();
+  }
+
+  render(){
+    return (
+      <form onSubmit={this.submit}>
+        <label for="rollSpec">Roll spec</label>
+        <input type="text" id="rollSpec" />
+        <button type="submit">Fill my cup</button>
+      </form>
+    )
+  }
+}
