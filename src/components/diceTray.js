@@ -4,11 +4,19 @@ class DiceTray extends React.Component{
     constructor(props){
         super(props);
         this.rollDice = this.rollDice.bind(this);
+        this.rerollOnes = this.rerollOnes.bind(this);
         this.dice = [];
     }
 
     rollDice(){
         this.dice.forEach(d => {
+            d.roll();
+        });
+    }
+
+    rerollOnes(){
+        var ones = this.dice.filter(d => d.value === 1) || [];
+        ones.forEach(d => {
             d.roll();
         });
     }
@@ -31,6 +39,7 @@ class DiceTray extends React.Component{
                     })}
                 </div>
                 <button onClick={this.rollDice}>Roll</button>
+                <button onClick={this.rerollOnes}>Reroll Ones</button>
             </div>
         );
     }
@@ -45,6 +54,10 @@ class Dice extends React.Component{
     roll(){
         const min = 1;
         this.setState({value: Math.floor(Math.random() * (this.props.size - min +1)) + min});
+    }
+
+    get value(){
+        return this.state.value;
     }
 
     render(){
