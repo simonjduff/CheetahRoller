@@ -1,9 +1,14 @@
-import React, { Component } from 'react';
+import React from 'react';
 import RollSpecParser from './rollSpec';
 
 class SpecQuestion extends React.Component {
+  constructor(props){
+    super(props);
+    this.specChanged = this.specChanged.bind(this);
+    this.submit = this.submit.bind(this);
+  }
 
-    submit = (event) => {
+    submit(event) {
       event.preventDefault();
   
       var parsed = new RollSpecParser(this.state.rawSpec);
@@ -13,12 +18,10 @@ class SpecQuestion extends React.Component {
         return;
       }
   
-      parsed.specs.forEach(e => {
-        console.log(`${e.count} d ${e.size}`);
-      });
+      this.props.onSpecDefined(parsed.specs);
     }
   
-    specChanged = (event) => {
+    specChanged(event) {
       this.setState({rawSpec: event.target.value});
     }
   
