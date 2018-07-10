@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import RollSpecParser from './rollSpec.js';
 
 class App extends Component {
+constructor(props){
+  super(props);
+  this.state = {rollState:"emptyCup"};
+}
+
   render() {
     return (
       <div className="App">
-        <DiceCup />
+        <DiceTray />
       </div>
     );
   }
@@ -14,10 +19,21 @@ class App extends Component {
 
 export default App;
 
-class DiceCup extends React.Component{
+class DiceTray extends React.Component {
+
   submit = (event) => {
-    console.log(this.state.rawSpec);
     event.preventDefault();
+
+    var parsed = new RollSpecParser(this.state.rawSpec);
+
+    if (!parsed.isValid){
+      console.log('Regex validation failed');
+      return;
+    }
+
+    parsed.specs.forEach(e => {
+      console.log(`${e.count} d ${e.size}`);
+    });
   }
 
   specChanged = (event) => {
@@ -27,8 +43,11 @@ class DiceCup extends React.Component{
   render(){
     return (
       <form onSubmit={this.submit}>
-        <label for="rollSpec">Roll spec</label>
-        <input type="text" id="rollSpec" onChange={this.specChanged} />
+        <label htmlFor="rollSpec">Roll spec</label>
+        <input type="text" 
+          autoFocus="true"
+          id="rollSpec" 
+          onChange={this.specChanged} />
         <button type="submit">Fill my cup</button>
       </form>
     )
